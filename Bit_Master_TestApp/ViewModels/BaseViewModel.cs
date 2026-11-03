@@ -1,0 +1,55 @@
+﻿using Bit_Master_TestApp.Data;
+using Bit_Master_TestApp.Interfaces;
+using Bit_Master_TestApp.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
+
+namespace Bit_Master_TestApp.ViewModels
+{
+    public partial class BaseViewModel<T> : ObservableObject where T : class
+    {
+        protected readonly IDbContextFactory<AppDbContext> _dbFactory;
+        protected readonly IDialogService _dialogService;
+
+        public ObservableCollection<T> Items { get; } = [];
+
+        protected BaseViewModel(IDbContextFactory<AppDbContext> dbFactory, IDialogService dialogService)
+        {
+            _dbFactory = dbFactory;
+            _dialogService = dialogService;
+            _ = LoadAsync();
+        }
+
+        [RelayCommand]
+        protected virtual async Task LoadAsync()
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            var dbSet = await dbContext.Set<T>().AsNoTracking().ToListAsync();
+
+            Items.Clear();
+            foreach (var item in dbSet)
+                Items.Add(item);
+        }
+
+        [RelayCommand]
+        protected virtual async Task<T?> FindById(int id)
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            DbSet<T> dbSet = dbContext.Set<T>();
+
+            return await dbSet.FindAsync(id);
+        }
+
+        [RelayCommand]
+        protected virtual async Task<T?> RemoveById(int id)
+        {
+            await using var dbContext = await _dbFactory.CreateDbContextAsync();
+            DbSet<T> dbSet = dbContext.Set<T>();
+            var removedEntity = await dbSet.FindAsync(id);
+            if (removedEntity != null) dbSet.Remove(removedEntity);
+            return removedEntity;
+        }
+    }
+}
