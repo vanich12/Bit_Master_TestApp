@@ -21,7 +21,6 @@ public abstract partial class BaseViewModel<T> : ObservableObject where T : clas
         _ = LoadAsync();
     }
 
-    [RelayCommand]
     protected virtual async Task LoadAsync()
     {
         await using var dbContext = await _dbFactory.CreateDbContextAsync();
@@ -32,8 +31,7 @@ public abstract partial class BaseViewModel<T> : ObservableObject where T : clas
             Items.Add(item);
     }
 
-    [RelayCommand]
-    protected virtual async Task<T?> FindById(int id)
+    protected virtual async Task<T?> FindByIdAsync(int id)
     {
         await using var dbContext = await _dbFactory.CreateDbContextAsync();
         DbSet<T> dbSet = dbContext.Set<T>();
@@ -41,8 +39,7 @@ public abstract partial class BaseViewModel<T> : ObservableObject where T : clas
         return await dbSet.FindAsync(id);
     }
 
-    [RelayCommand]
-    protected virtual async Task<bool> RemoveById(int id)
+    protected virtual async Task<bool> RemoveByIdAsync(int id)
     {
         await using var dbContext = await _dbFactory.CreateDbContextAsync();
         DbSet<T> dbSet = dbContext.Set<T>();

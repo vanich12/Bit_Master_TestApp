@@ -16,11 +16,11 @@
 
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <Button Content="Добавить" 
-                        Command="{Binding CreateCarCommand}"
+                        Command="{Binding NavigateToCreateCommand}"
                         Padding="10,5"
                         Margin="0,0,5,0" />
                 <Button Content="Редактировать" 
-                        Command="{Binding EditCarCommand}" 
+                        Command="{Binding NavigateToUpdateCommand}" 
                         CommandParameter="{Binding SelectedCar}" 
                         Padding="10,5" 
                         Margin="0,0,5,0" />

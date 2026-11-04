@@ -10,5 +10,6 @@ namespace Bit_Master_TestApp.Models.Messages
     {
         public List<int> UpdatedCarIds { get; set; } = [];
         public List<int> UpdatedDriverIds { get; set; } = [];
+        public List<int> RemovedCrewId { get; set; } = [];
     }
 }

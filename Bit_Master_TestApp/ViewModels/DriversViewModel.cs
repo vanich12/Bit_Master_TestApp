@@ -19,14 +19,22 @@ public partial class DriversViewModel(IDbContextFactory<AppDbContext> dbFactory,
     private async Task Delete()
     {
         if (SelectedDriver == null) return;
-        if (!await RemoveById(SelectedDriver.Id))
+        if (!await RemoveByIdAsync(SelectedDriver.Id))
         {
             _dialogService.ShowWarning("Нельзя запись о данном водителе,так как он состоит в экипаже", "Ошибка");
         }
     }
 
     [RelayCommand]
-    private async Task EditDriverAsync(Driver? driver)
+    private async Task NavigateToCreate()
+    {
+        var vm = new DriverModalViewModel(_dbFactory, dialogService);
+        if (_dialogService.ShowEditor(vm))
+            await LoadAsync();
+    }
+
+    [RelayCommand]
+    private async Task NavigateToUpdate(Driver? driver)
     {
         if (driver == null) return;
 
@@ -42,4 +50,3 @@ public partial class DriversViewModel(IDbContextFactory<AppDbContext> dbFactory,
         }
     }
 }
-

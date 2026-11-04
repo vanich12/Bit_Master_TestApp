@@ -6,58 +6,63 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.IO;
 using System.Windows;
 
 
-namespace Bit_Master_TestApp
+namespace Bit_Master_TestApp;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App : Application
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    private IHost _host;
+
+    protected override async void OnStartup(StartupEventArgs e)
     {
-        private IHost _host;
-
-        protected override async void OnStartup(StartupEventArgs e)
+         _host = Host.CreateDefaultBuilder()
+            .ConfigureServices((context,services) =>
         {
-             _host = Host.CreateDefaultBuilder()
-                .ConfigureServices((context,services) =>
-            {
-                services.AddDbContextFactory<AppDbContext>(options => 
-                    options.UseSqlite("Data Source=app.db"));
+            var databaseDirectory = Path.Combine(AppContext.BaseDirectory, "Database");
+            Directory.CreateDirectory(databaseDirectory);
+            var databasePath = Path.Combine(databaseDirectory, "app.db");
 
-                services.AddSingleton<IDialogService, DialogService>();
-                services.AddSingleton<IMessenger, WeakReferenceMessenger>();
+            services.AddDbContextFactory<AppDbContext>(options =>
+                options.UseSqlite($"Data Source={databasePath}"));
 
-                services.AddTransient<CarsViewModel>();
-                services.AddTransient<CrewsViewModel>();
-                services.AddTransient<DriversViewModel>();
+            services.AddHostedService<BackgroundDeleteService>();
+            services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<IMessenger, WeakReferenceMessenger>();
 
-                services.AddTransient<MainWindow>();
-                services.AddTransient<MainViewModel>();
+            services.AddTransient<CarsViewModel>();
+            services.AddTransient<CrewsViewModel>();
+            services.AddTransient<DriversViewModel>();
 
-                services.AddTransient<CarsViewModel>();
-                services.AddTransient<DriversViewModel>();
-                services.AddTransient<CrewsViewModel>();
+            services.AddTransient<MainWindow>();
+            services.AddTransient<MainViewModel>();
 
-            }).Build();
+            services.AddTransient<CarsViewModel>();
+            services.AddTransient<DriversViewModel>();
+            services.AddTransient<CrewsViewModel>();
 
-            await _host.StartAsync();
+        }).Build();
 
-            var dbFactory = _host.Services.GetRequiredService<IDbContextFactory<AppDbContext>>();
-            await DataSeeder.SeedAsync(dbFactory);
+        await _host.StartAsync();
 
-            var mainWindow = _host.Services.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+        var dbFactory = _host.Services.GetRequiredService<IDbContextFactory<AppDbContext>>();
+        await DataSeeder.SeedAsync(dbFactory);
 
-            base.OnStartup(e);
-        }
+        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+        mainWindow.Show();
 
-        protected override async void OnExit(ExitEventArgs e)
-        {
-            await _host.StopAsync();
-            _host.Dispose();
-            base.OnExit(e);
-        }
+        base.OnStartup(e);
+    }
+
+    protected override async void OnExit(ExitEventArgs e)
+    {
+        await _host.StopAsync();
+        _host.Dispose();
+        base.OnExit(e);
     }
 }
