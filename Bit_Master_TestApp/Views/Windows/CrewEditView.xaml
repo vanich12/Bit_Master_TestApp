@@ -3,13 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Bit_Master_TestApp.Views.Windows"
              xmlns:modalViewModels="clr-namespace:Bit_Master_TestApp.ViewModels.ModalViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignWidth="480"
              d:DataContext="{d:DesignInstance Type=modalViewModels:CrewModalViewModel}">
 
-    <Grid Margin="20">
+    <Grid Margin="20" Width="420">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -18,39 +17,28 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Машина:" VerticalAlignment="Center" Margin="0,0,10,12"/>
-        <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,0,0,12" Padding="6,4"
+        <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,0,0,12"
                   ItemsSource="{Binding AvailableCars}"
                   SelectedItem="{Binding SelectedCar}"
                   DisplayMemberPath="Model"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Водитель:" VerticalAlignment="Center" Margin="0,0,10,12"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,12" Padding="6,4"
+        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,12"
                   ItemsSource="{Binding AvailableDrivers}"
                   SelectedItem="{Binding SelectedDriver}"
                   DisplayMemberPath="FullName"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Активен:" VerticalAlignment="Center" Margin="0,0,10,20"/>
-        <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,20"
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Активен:" VerticalAlignment="Center" Margin="0,0,10,25"/>
+        <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,25"
                   IsChecked="{Binding Item.Active}"/>
 
         <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Width="110" Padding="0,6" Margin="0,0,10,0" IsDefault="True" Content="Сохранить">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Command" Value="{Binding UpdateCommand}"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsNew}" Value="True">
-                                <Setter Property="Command" Value="{Binding CreateCommand}"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-            <Button Content="Отмена" Width="110" Padding="0,6" IsCancel="True" Command="{Binding CancelCommand}"/>
+            <Button Content="Сохранить" Style="{StaticResource SaveButtonStyle}" Margin="0,0,10,0"/>
+            <Button Content="Отмена" Style="{StaticResource CancelButtonStyle}"/>
         </StackPanel>
     </Grid>
 </UserControl>

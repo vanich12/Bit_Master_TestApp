@@ -8,41 +8,30 @@
       mc:Ignorable="d" 
       d:DataContext="{d:DesignInstance Type=viewModels:CrewsViewModel}">
 
-    <Grid Margin="10">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
             <Button Content="Добавить" 
-                    Command="{Binding NavigateToCreateCommand}"
-                    Padding="10,5" Margin="0,0,5,0" />
+                    Command="{Binding NavigateToCreateCommand}" />
             <Button Content="Редактировать" 
-                    Command="{Binding NavigateToUpdateCommand}"
-                    CommandParameter="{Binding SelectedCrew}"
-                    Padding="10,5" Margin="0,0,5,0" />
-            <Button Content="Удалить" Command="{Binding DeleteCommand}" Padding="10,5" />
+                    Command="{Binding NavigateToUpdateCommand}" 
+                    CommandParameter="{Binding SelectedCrew}" />
+            <Button Content="Удалить" 
+                    Command="{Binding DeleteCommand}" />
         </StackPanel>
 
         <DataGrid Grid.Row="1" 
                   ItemsSource="{Binding Items}" 
-                  SelectedItem="{Binding SelectedCrew}"
-                  AutoGenerateColumns="False" 
-                  IsReadOnly="True"
-                  CanUserAddRows="False">
+                  SelectedItem="{Binding SelectedCrew}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Машина" 
-                                    Binding="{Binding Car.Model}" Width="200"/>
-
-                <DataGridTextColumn Header="Госномер" 
-                                    Binding="{Binding Car.LicensePlate}" Width="120"/>
-
-                <DataGridTextColumn Header="Водитель" 
-                                    Binding="{Binding Driver.FullName}" Width="120"/>
-
-                <DataGridCheckBoxColumn Header="Активен" 
-                                        Binding="{Binding Active}" Width="80"/>
+                <DataGridTextColumn Header="Машина" Binding="{Binding Car.Model}" Width="*"/>
+                <DataGridTextColumn Header="Госномер" Binding="{Binding Car.LicensePlate}" Width="120"/>
+                <DataGridTextColumn Header="Водитель" Binding="{Binding Driver.FullName}" Width="200"/>
+                <DataGridCheckBoxColumn Header="Активен" Binding="{Binding Active}" Width="80"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

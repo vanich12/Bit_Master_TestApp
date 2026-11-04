@@ -8,36 +8,30 @@
               mc:Ignorable="d" 
               d:DataContext="{d:DesignInstance Type=viewModels:CarsViewModel}">
 
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <Button Content="Добавить" 
-                        Command="{Binding NavigateToCreateCommand}"
-                        Padding="10,5"
-                        Margin="0,0,5,0" />
-                <Button Content="Редактировать" 
-                        Command="{Binding NavigateToUpdateCommand}" 
-                        CommandParameter="{Binding SelectedCar}" 
-                        Padding="10,5" 
-                        Margin="0,0,5,0" />
-                <Button Content="Удалить" Command="{Binding DeleteCommand}"  Padding="10,5" />
-            </StackPanel>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+            <Button Content="Добавить" 
+                    Command="{Binding NavigateToCreateCommand}" />
+            <Button Content="Редактировать" 
+                    Command="{Binding NavigateToUpdateCommand}" 
+                    CommandParameter="{Binding SelectedCar}" />
+            <Button Content="Удалить" 
+                    Command="{Binding DeleteCommand}" />
+        </StackPanel>
 
-            <DataGrid Grid.Row="1" 
-                      ItemsSource="{Binding Items}" 
-                      SelectedItem="{Binding SelectedCar}"
-                      AutoGenerateColumns="False" 
-                      IsReadOnly="True"
-                      CanUserAddRows="False">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Модель" Binding="{Binding Model}" Width="*"/>
-                    <DataGridTextColumn Header="Госномер" Binding="{Binding LicensePlate}" Width="150"/>
-                    <DataGridTextColumn Header="Год выпуска" Binding="{Binding Year}" Width="100"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+        <DataGrid Grid.Row="1" 
+                  ItemsSource="{Binding Items}" 
+                  SelectedItem="{Binding SelectedCar}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Модель" Binding="{Binding Model}" Width="*"/>
+                <DataGridTextColumn Header="Госномер" Binding="{Binding LicensePlate}" Width="150"/>
+                <DataGridTextColumn Header="Год выпуска" Binding="{Binding Year}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </UserControl>
