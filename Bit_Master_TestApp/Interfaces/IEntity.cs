@@ -1,7 +1,7 @@
-﻿namespace Bit_Master_TestApp.Interfaces
+﻿namespace Bit_Master_TestApp.Interfaces;
+
+public interface IEntity
 {
-    public interface IEntity
-    {
-        int Id { get; set; }
-    }
+    int Id { get; set; }
 }
+

@@ -1,7 +1,6 @@
 ﻿using Bit_Master_TestApp.Data;
 using Bit_Master_TestApp.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 
