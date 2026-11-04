@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Bit_Master_TestApp.Models.Messages
+﻿namespace Bit_Master_TestApp.Models.Messages
 {
     public class CrewsRemovedMessage
     {
-        public List<int> RemovedCrewId { get; set; }
+        public List<int> RemovedCrewId { get; }
     }
 }

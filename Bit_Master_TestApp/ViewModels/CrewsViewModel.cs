@@ -2,6 +2,7 @@
 using Bit_Master_TestApp.Interfaces;
 using Bit_Master_TestApp.Models;
 using Bit_Master_TestApp.Models.Messages;
+using Bit_Master_TestApp.Services;
 using Bit_Master_TestApp.ViewModels.ModalViewModels;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,13 +14,16 @@ namespace Bit_Master_TestApp.ViewModels
     public partial class CrewsViewModel : BaseViewModel<Crew>, IRecipient<CrewsUpdatedMessages>
     {
         [ObservableProperty] private Crew? _selectedCrew;
-        public readonly IMessenger _messanger;
+        private readonly IMessenger _messanger;
+        private readonly IDialogService _dialogService;
+
         public CrewsViewModel(IDbContextFactory<AppDbContext> dbFactory, IDialogService dialogService, IMessenger messanger)
             : base(dbFactory, dialogService)
         {
             _messanger = messanger;
             _messanger.Register(this);
             _messanger = messanger;
+            _dialogService = dialogService;
         }
 
         [RelayCommand]
@@ -32,7 +36,7 @@ namespace Bit_Master_TestApp.ViewModels
         [RelayCommand]
         private async Task CreateCrewAsync()
         {
-            var vm = new CrewModalViewModel(_dbFactory);
+            var vm = new CrewModalViewModel(_dbFactory, _dialogService);
             if (_dialogService.ShowEditor(vm))
                 await LoadAsync();
         }
@@ -42,7 +46,7 @@ namespace Bit_Master_TestApp.ViewModels
         {
             if (crew == null) return;
 
-            var vm = new CrewModalViewModel(_dbFactory, crew);
+            var vm = new CrewModalViewModel(_dbFactory, _dialogService, crew);
             if (_dialogService.ShowEditor(vm))
                 await LoadAsync();
         }

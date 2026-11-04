@@ -8,10 +8,13 @@ using System.Windows;
 
 namespace Bit_Master_TestApp.ViewModels.ModalViewModels
 {
-    public abstract partial class BaseModalViewModel<T>(IDbContextFactory<AppDbContext> dbFactory, T? existing = null)
+    public abstract partial class BaseModalViewModel<T>(IDbContextFactory<AppDbContext> dbFactory, IDialogService dialogService, T? existing = null)
         : ObservableObject
         where T : class, IEntity, new()
     {
+        protected abstract Task<bool> ValidateAsync();
+
+
         protected readonly IDbContextFactory<AppDbContext> _dbFactory = dbFactory;
         public T Item { get; } = existing ?? Activator.CreateInstance<T>();
         public bool IsNew { get; set; } = existing == null;
@@ -19,6 +22,7 @@ namespace Bit_Master_TestApp.ViewModels.ModalViewModels
         [RelayCommand]
         private async Task Update()
         {
+            if (!await ValidateAsync()) return;
             await using var db = await _dbFactory.CreateDbContextAsync();
             var old = await db.Set<T>().FindAsync(Item.Id);
 
@@ -38,6 +42,7 @@ namespace Bit_Master_TestApp.ViewModels.ModalViewModels
         [RelayCommand]
         private async Task CreateAsync()
         {
+            if (!await ValidateAsync()) return;
             await using var dbContext = await _dbFactory.CreateDbContextAsync();
             DbSet<T> dbSet = dbContext.Set<T>();
 

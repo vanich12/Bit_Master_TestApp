@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 
-namespace Bit_Master_TestApp.Interfaces
+namespace Bit_Master_TestApp.Interfaces;
+
+public interface IDialogService
 {
-    public interface IDialogService
-    {
-        bool ShowEditor<T>(T viewModel) where T : ObservableObject;
-        int? CurrentEditingCrewId { get; }
-    }
+    bool ShowEditor<T>(T viewModel) where T : ObservableObject;
+    public void ShowWarning(string message, string title);
 }
+

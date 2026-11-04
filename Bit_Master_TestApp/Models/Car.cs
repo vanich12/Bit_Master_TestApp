@@ -1,6 +1,5 @@
 ﻿using Bit_Master_TestApp.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Bit_Master_TestApp.Models;
 

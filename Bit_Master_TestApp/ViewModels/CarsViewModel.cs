@@ -19,16 +19,18 @@ namespace Bit_Master_TestApp.ViewModels
         private readonly IMessenger _messenger = messenger;
 
         [RelayCommand]
-        private void Delete()
+        private async Task Delete()
         {
             if (SelectedCar == null) return;
-            _ = RemoveById(SelectedCar.Id);
+            if (!await RemoveById(SelectedCar.Id)) {
+                _dialogService.ShowWarning("Нельзя удалить эту машину, так как она используется в экипажах", "Ошибка");
+            }
         }
 
         [RelayCommand]
         private async Task CreateCarAsync()
         {
-            var vm = new CarModalViewModel(_dbFactory);
+            var vm = new CarModalViewModel(_dbFactory, dialogService);
             if (_dialogService.ShowEditor(vm))
                 await LoadAsync();
         }
@@ -38,7 +40,7 @@ namespace Bit_Master_TestApp.ViewModels
         {
             if (car == null) return;
 
-            var vm = new CarModalViewModel(_dbFactory, car);
+            var vm = new CarModalViewModel(_dbFactory, dialogService, car);
             if (_dialogService.ShowEditor(vm))
             {
                 var message = new CrewsUpdatedMessages
