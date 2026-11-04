@@ -13,29 +13,45 @@ public class BackgroundDeleteService(IDbContextFactory<AppDbContext> dbFactory, 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
-        
-        while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
+
+        try
         {
-            await using var dbContext = await  dbFactory.CreateDbContextAsync(stoppingToken);
-            var threshold = DateTime.UtcNow.AddSeconds(-30);
-
-            var inactiveCrews = await dbContext.Crews.Where(x => !x.Active && x.UpdatedAt < threshold 
-                                                                           && dialogService.CurrentEditingCrewId != x.Id).ToListAsync(cancellationToken: stoppingToken);
-
-            if (!inactiveCrews.Any()) continue;
-
-            dbContext.Crews.RemoveRange(inactiveCrews);
-            await dbContext.SaveChangesAsync(stoppingToken);
-
-            var message = new CrewsUpdatedMessages
+            while (await timer.WaitForNextTickAsync(stoppingToken))
             {
-                RemovedCrewId = inactiveCrews.Select(x => x.Id).ToList()
-            };
+                await using var dbContext = await dbFactory.CreateDbContextAsync(stoppingToken);
+                var threshold = DateTime.UtcNow.AddSeconds(-10);
 
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                messenger.Send(message);
-            });
+                var currentEditingId = dialogService.CurrentEditingCrewId;
+
+                var inactiveCrews = await dbContext.Crews
+                    .Where(x => !x.Active
+                                && x.UpdatedAt < threshold
+                                && (currentEditingId == null || x.Id != currentEditingId))
+                    .ToListAsync(stoppingToken);
+
+                if (!inactiveCrews.Any()) continue;
+
+                dbContext.Crews.RemoveRange(inactiveCrews);
+                await dbContext.SaveChangesAsync(stoppingToken);
+
+                var removedIds = inactiveCrews.Select(x => x.Id).ToList();
+                var message = new CrewsUpdatedMessages
+                {
+                    RemovedCrewId = removedIds
+                };
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    messenger.Send(message);
+                });
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка в фоновом сервисе: {ex.Message}");
         }
     }
 }

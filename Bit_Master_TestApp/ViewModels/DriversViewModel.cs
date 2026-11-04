@@ -21,7 +21,7 @@ public partial class DriversViewModel(IDbContextFactory<AppDbContext> dbFactory,
         if (SelectedDriver == null) return;
         if (!await RemoveByIdAsync(SelectedDriver.Id))
         {
-            _dialogService.ShowWarning("Нельзя запись о данном водителе,так как он состоит в экипаже", "Ошибка");
+            _dialogService.ShowWarning("Нельзя удалить запись о данном водителе,так как он состоит в экипаже", "Ошибка");
         }
     }
 
