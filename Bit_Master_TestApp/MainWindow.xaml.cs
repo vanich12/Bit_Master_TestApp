@@ -1,26 +1,16 @@
-﻿using System.Text;
+﻿using Bit_Master_TestApp.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Bit_Master_TestApp.ViewModels;
 
-namespace Bit_Master_TestApp
+namespace Bit_Master_TestApp;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public MainWindow(MainViewModel vm)
     {
-        public MainWindow(MainViewModel vm)
-        {
-            InitializeComponent();
-            DataContext = vm;
-        }
+        InitializeComponent();
+        DataContext = vm;
     }
 }
